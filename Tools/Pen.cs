@@ -8,7 +8,7 @@ namespace MiniShop.Tools
 {
     public class Pen(WriteableBitmap _bitmap) : ITool
     {
-        private bool _isPanning = true;
+        private bool _isPanning = false;
         public void OnMoved(object? sender, RoutedEventArgs e, Point position)
         {
             if (!_isPanning) return;
