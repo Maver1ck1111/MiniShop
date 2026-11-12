@@ -8,7 +8,8 @@
         Title="MiniShop">
 	<Grid ColumnDefinitions="1*, 9*" 
           RowDefinitions="1*">
-		<local:ImageViewer Grid.Column="1"/>
+		<local:ToolsBar x:Name="ToolsBar" Grid.Column="0" />
+		<local:ImageViewer x:Name="ImageViewer" Grid.Column="1"/>
 	</Grid>
 
 </Window>

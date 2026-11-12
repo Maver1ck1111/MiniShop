@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 Background="#121212"
+             x:Class="MiniShop.ToolsBar">
+    <StackPanel
+		Margin="5"
+		Spacing="5">
+		<Button
+		  Width="50"
+		  Height="50"
+		  Click="OnPenSelected">
+
+			<Image Source="avares://MiniShop/Assets/Pen.png"/>
+		</Button>
+	</StackPanel>
+</UserControl>

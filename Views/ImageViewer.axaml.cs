@@ -2,11 +2,13 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Avalonia.Platform.Storage;
-using SkiaSharp;
+using MiniShop.Enums;
+using MiniShop.Factories;
+using MiniShop.Tools;
 using System;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -15,6 +17,7 @@ namespace MiniShop;
 public partial class ImageViewer : UserControl
 {
     private readonly double _zoomFactor = 1.15;
+    private double _currentScale = 1;
     private double _actualWidth;
     private double _actualHeight;
     private Point _startPoint;
@@ -22,10 +25,18 @@ public partial class ImageViewer : UserControl
 
     private readonly ScaleTransform _scaleTransform = new(1, 1);
     private readonly TranslateTransform _translateTransform = new(0, 0);
+    private ITool? _tool = null;
+    private ToolsFactory _factory;
 
     public ImageViewer()
     {
         InitializeComponent();
+        _factory = new ToolsFactory();
+    }
+    public void SetTool(object? sender, ToolMode toolMode)
+    {
+        if (Image.Source is WriteableBitmap bitmap)
+            _tool = _factory.CreateTool(toolMode, bitmap);
     }
     private async void OnSelectImageClicked(object? sender, RoutedEventArgs e)
     {
@@ -48,13 +59,31 @@ public partial class ImageViewer : UserControl
 
             await using var stream = await file.OpenReadAsync();
 
-            var bitmap = new Bitmap(stream);
-            Image.Source = bitmap;
+            var originalBitmap = new Bitmap(stream);
+
+            var writeableBitmap = new WriteableBitmap(
+                new PixelSize((int)originalBitmap.Size.Width, (int)originalBitmap.Size.Height),
+                new Vector(96, 96),
+                PixelFormat.Bgra8888,
+                AlphaFormat.Premul
+            );
+
+            using (var lockedFrame = writeableBitmap.Lock())
+            {
+                originalBitmap.CopyPixels(
+                    new PixelRect(0, 0, writeableBitmap.PixelSize.Width, writeableBitmap.PixelSize.Height),
+                    lockedFrame.Address,
+                    lockedFrame.Size.Height * lockedFrame.RowBytes,
+                    lockedFrame.RowBytes
+                );
+            }
+
+            Image.Source = writeableBitmap;
 
             SelectImageButton.IsVisible = false;
 
-            _actualHeight = bitmap.Size.Height;
-            _actualWidth = bitmap.Size.Width;
+            _actualHeight = originalBitmap.Size.Height;
+            _actualWidth = originalBitmap.Size.Width;
 
             Loaded += (s, e) => CenterImage();
             ViewportBorder.SizeChanged += (s, e) => CenterImage();
@@ -83,6 +112,8 @@ public partial class ImageViewer : UserControl
         _scaleTransform.ScaleX = newScale;
         _scaleTransform.ScaleY = newScale;
 
+        _currentScale = newScale;
+
         if(Image.Source is not Bitmap bitmap) return;
 
         _actualWidth = bitmap.Size.Width * newScale;
@@ -94,27 +125,48 @@ public partial class ImageViewer : UserControl
     }
     private void OnCanvasPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        var properties = e.GetCurrentPoint(ViewportBorder).Properties;
+        if (_tool is null)
+        {
+            DefaultPointerPressedBehaviour(sender, e);
+            return;
+        }
 
-        if (!properties.IsMiddleButtonPressed) return;
-
-        _isPanning = true;
-        _startPoint = e.GetPosition(ViewportBorder);
-        e.Pointer.Capture(ViewportBorder);
+        _tool.OnPressed(sender, e);
     }
     private void OnCanvasPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        if (_isPanning)
+        if (_tool is null)
         {
-            _isPanning = false;
-            e.Pointer.Capture(null);
+            DefaultPointerReleasedBehaviour(sender, e);
+            return;
         }
+
+        _tool.OnReleased(sender, e);
     }
 
     private void OnCanvasPointerMoved(object? sender, PointerEventArgs e)
     {
+        if (_tool is null)
+        {
+            DefaultPointerMovedBehaviour(sender, e);
+            return;
+        }
+
+        var mousePos = e.GetPosition(ViewportBorder);
+
+        double pointX = Math.Abs(Math.Abs(_translateTransform.X) - mousePos.X) / _currentScale;
+        double pointY = Math.Abs(Math.Abs(_translateTransform.Y) - mousePos.Y) / _currentScale;
+
+        var actualPoin = new Point(pointX, pointY);
+
+        _tool.OnMoved(sender, e, actualPoin);
+        Image.InvalidateVisual();
+    }
+
+    private void DefaultPointerMovedBehaviour(object? sender, PointerEventArgs e)
+    {
         if (!_isPanning) return;
-        if(IsTheHolePictureOnTheScreen()) return;
+        if (IsTheHolePictureOnTheScreen()) return;
 
         var currentPoint = e.GetPosition(ViewportBorder);
         var delta = currentPoint - _startPoint;
@@ -126,7 +178,24 @@ public partial class ImageViewer : UserControl
 
         _startPoint = currentPoint;
     }
+    private void DefaultPointerReleasedBehaviour(object? sender, PointerReleasedEventArgs e)
+    {
+        if (_isPanning)
+        {
+            _isPanning = false;
+            e.Pointer.Capture(null);
+        }
+    }
+    private void DefaultPointerPressedBehaviour(object? sender, PointerPressedEventArgs e)
+    {
+        var properties = e.GetCurrentPoint(ViewportBorder).Properties;
 
+        if (!properties.IsMiddleButtonPressed) return;
+
+        _isPanning = true;
+        _startPoint = e.GetPosition(ViewportBorder);
+        e.Pointer.Capture(ViewportBorder);
+    }
     private void CenterImage()
     {
         double viewportWidth = ViewportBorder.Bounds.Width;
