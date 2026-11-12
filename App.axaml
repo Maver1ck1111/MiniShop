@@ -1,0 +1,13 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="MiniShop.App"
+             RequestedThemeVariant="Default">
+
+	<Application.Styles>
+		<FluentTheme>
+			<FluentTheme.Palettes>
+				<ColorPaletteResources x:Key="Dark" Accent="DarkGray" RegionColor="DarkGray" ErrorText="Yellow" />
+			</FluentTheme.Palettes>
+		</FluentTheme>
+	</Application.Styles>
+</Application>
