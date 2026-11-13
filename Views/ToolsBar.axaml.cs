@@ -3,7 +3,7 @@ using Avalonia.Interactivity;
 using MiniShop.Enums;
 using System;
 
-namespace MiniShop;
+namespace MiniShop.Views;
 
 public partial class ToolsBar : UserControl
 {

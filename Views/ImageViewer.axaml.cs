@@ -6,13 +6,14 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Platform.Storage;
+using Microsoft.Extensions.DependencyInjection;
 using MiniShop.Enums;
 using MiniShop.Factories;
 using MiniShop.Tools;
 using System;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace MiniShop;
+namespace MiniShop.Views;
 
 public partial class ImageViewer : UserControl
 {
@@ -26,12 +27,12 @@ public partial class ImageViewer : UserControl
     private readonly ScaleTransform _scaleTransform = new(1, 1);
     private readonly TranslateTransform _translateTransform = new(0, 0);
     private ITool? _tool = null;
-    private ToolsFactory _factory;
+    private IToolsFactory _factory;
 
     public ImageViewer()
     {
         InitializeComponent();
-        _factory = new ToolsFactory();
+        _factory = App.ServiceProvider?.GetService<IToolsFactory>();
     }
     public void SetTool(object? sender, ToolMode toolMode)
     {

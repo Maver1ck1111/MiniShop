@@ -2,14 +2,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:local="clr-namespace:MiniShop"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="MiniShop.MainWindow"
+		xmlns:local="clr-namespace:MiniShop.Views"
+        x:Class="MiniShop.Views.MainWindow"
         Title="MiniShop">
-	<Grid ColumnDefinitions="1*, 9*" 
-          RowDefinitions="1*">
-		<local:ToolsBar x:Name="ToolsBar" Grid.Column="0" />
+	
+	<Grid ColumnDefinitions="1*, 8*, Auto" 
+          RowDefinitions="1*"
+		  x:Name="MainGrid">
+		<local:ToolsBar x:Name="ToolsBar" Grid.Column="0"/>
 		<local:ImageViewer x:Name="ImageViewer" Grid.Column="1"/>
+		<local:ToolsSettingsBar x:Name="SettingsBar" Grid.Column="2"/>
 	</Grid>
 
 </Window>

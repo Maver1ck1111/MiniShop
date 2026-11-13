@@ -2,11 +2,12 @@
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
+using MiniShop.Tools.ToolsSettings;
 using System;
 
 namespace MiniShop.Tools
 {
-    public class Pen(WriteableBitmap _bitmap) : ITool
+    public class Pen(PenSettings _settings, WriteableBitmap _bitmap) : ITool
     {
         private bool _isPanning = false;
         public void OnMoved(object? sender, RoutedEventArgs e, Point position)

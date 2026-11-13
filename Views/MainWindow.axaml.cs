@@ -1,9 +1,7 @@
 using Avalonia.Controls;
-using Avalonia.Input;
-using Avalonia.Media;
 using MiniShop.Enums;
 
-namespace MiniShop;
+namespace MiniShop.Views;
 
 public partial class MainWindow : Window
 {
@@ -12,6 +10,21 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         ToolsBar.ToolSelected += ImageViewer.SetTool;
+        ToolsBar.ToolSelected += UpdateToolsSettingsVisibility;
+    }
+
+    public void UpdateToolsSettingsVisibility(object? sender, ToolMode toolMode)
+    {
+        if (toolMode == ToolMode.None)
+        {
+            MainGrid.ColumnDefinitions[2].Width = new GridLength(0);
+            SettingsBar.IsVisible = false;
+        } 
+        else
+        {
+            MainGrid.ColumnDefinitions[2].Width = new GridLength(1, GridUnitType.Star);
+            SettingsBar.IsVisible = true;
+        }
     }
 
 }

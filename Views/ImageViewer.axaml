@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:local="clr-namespace:MiniShop"
 			 Background="#262626"
-             x:Class="MiniShop.ImageViewer">
+             x:Class="MiniShop.Views.ImageViewer">
 	<Grid>
 		<Border x:Name="ViewportBorder"
         ClipToBounds="True"

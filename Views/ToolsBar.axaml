@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 Background="#121212"
-             x:Class="MiniShop.ToolsBar">
+             x:Class="MiniShop.Views.ToolsBar">
     <StackPanel
 		Margin="5"
 		Spacing="5">
