@@ -1,5 +1,4 @@
 ﻿using Avalonia.Media.Imaging;
-using MiniShop.Enums;
 using MiniShop.Tools;
 using System;
 using System.Collections.Generic;

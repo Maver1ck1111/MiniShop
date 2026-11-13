@@ -7,7 +7,6 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Platform.Storage;
 using Microsoft.Extensions.DependencyInjection;
-using MiniShop.Enums;
 using MiniShop.Factories;
 using MiniShop.Tools;
 using System;
@@ -155,8 +154,8 @@ public partial class ImageViewer : UserControl
 
         var mousePos = e.GetPosition(ViewportBorder);
 
-        double pointX = Math.Abs(Math.Abs(_translateTransform.X) - mousePos.X) / _currentScale;
-        double pointY = Math.Abs(Math.Abs(_translateTransform.Y) - mousePos.Y) / _currentScale;
+        double pointX = Math.Abs(_translateTransform.X - mousePos.X) / _currentScale;
+        double pointY = Math.Abs(_translateTransform.Y - mousePos.Y) / _currentScale;
 
         var actualPoin = new Point(pointX, pointY);
 

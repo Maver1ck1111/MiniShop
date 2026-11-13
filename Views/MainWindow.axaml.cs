@@ -1,5 +1,5 @@
 using Avalonia.Controls;
-using MiniShop.Enums;
+using MiniShop.Tools;
 
 namespace MiniShop.Views;
 

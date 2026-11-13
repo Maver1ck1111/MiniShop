@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="MiniShop.Views.PenSettingsBar">
+	
+	<StackPanel 
+		Spacing="5">
+		<TextBlock 
+			x:Name="PixelSizeBlock"
+            Text="Choose pen size"
+            FontSize="14"/>
+		
+		<ComboBox x:Name="PenSizeComboBox" SelectionChanged="PenPixelSizeChangedBox">
+			<ComboBoxItem Content="1"/>
+			<ComboBoxItem Content="4"/>
+			<ComboBoxItem Content="16"/>
+			<ComboBoxItem Content="25"/>
+			<ComboBoxItem Content="64"/>
+		</ComboBox>
+
+
+		<ComboBox x:Name="PenColorComboBox" SelectionChanged="PenColorChangedBox">
+			<ComboBoxItem Content="Black"/>
+			<ComboBoxItem Content="Red"/>
+			<ComboBoxItem Content="White"/>
+			<ComboBoxItem Content="Yellow"/>
+			<ComboBoxItem Content="Green"/>
+		</ComboBox>
+
+		<TextBlock
+			x:Name="OpacityBlock"
+			Text="Choose Opacity"
+			FontSize="14"/>
+		
+		<TextBox 
+			x:Name="OpacityTexBox"
+			TextChanged="OnTextChanged" />
+		
+	</StackPanel>
+
+</UserControl>

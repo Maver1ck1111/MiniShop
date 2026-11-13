@@ -1,4 +1,6 @@
-﻿namespace MiniShop.Tools.ToolsSettings
+﻿using MiniShop.Tools.Pen;
+
+namespace MiniShop.Tools
 {
     public class ToolsSettings
     {

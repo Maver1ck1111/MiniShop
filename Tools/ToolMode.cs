@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MiniShop.Enums
+namespace MiniShop.Tools
 {
     public enum ToolMode
     {

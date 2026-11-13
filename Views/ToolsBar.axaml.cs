@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using MiniShop.Enums;
+using MiniShop.Tools;
 using System;
 
 namespace MiniShop.Views;

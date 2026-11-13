@@ -3,7 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using MiniShop.Factories;
-using MiniShop.Tools.ToolsSettings;
+using MiniShop.Tools;
 using MiniShop.Views;
 using System;
 

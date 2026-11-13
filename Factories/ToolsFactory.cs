@@ -1,7 +1,6 @@
 ﻿using Avalonia.Media.Imaging;
-using MiniShop.Enums;
 using MiniShop.Tools;
-using MiniShop.Tools.ToolsSettings;
+using MiniShop.Tools.Pen;
 
 namespace MiniShop.Factories
 {
