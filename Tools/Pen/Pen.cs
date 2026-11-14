@@ -2,6 +2,7 @@
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using System;
 
 namespace MiniShop.Tools.Pen
@@ -9,10 +10,11 @@ namespace MiniShop.Tools.Pen
     public class Pen(PenSettings _settings, WriteableBitmap _bitmap) : ITool
     {
         private bool _isPanning = false;
+        
         public void OnMoved(object? sender, RoutedEventArgs e, Point position)
         {
             if (!_isPanning) return;
-
+            
             double radius = Math.Sqrt(_settings.PixelSize);
 
             if (!double.IsInteger(radius)) return;
@@ -25,6 +27,8 @@ namespace MiniShop.Tools.Pen
             int centerX = (int) position.X;
             int centerY = (int) position.Y;
 
+            var lockedBitmap = _bitmap.Lock();
+
             for (int y = -intRadius; y <= radius; y++)
             {
                 for (int x = -intRadius; x <= radius; x++)
@@ -36,11 +40,13 @@ namespace MiniShop.Tools.Pen
 
                         if (targetX >= 0 && targetX < bitmapWidth && targetY >= 0 && targetY < bitmapHeight)
                         {
-                            SetPixel(targetX, targetY);
+                            SetPixel(targetX, targetY, lockedBitmap);
                         }
                     }
                 }
             }
+            
+            lockedBitmap.Dispose();
         }
 
         public void OnPressed(object? sender, PointerPressedEventArgs e, Point? position)
@@ -57,43 +63,40 @@ namespace MiniShop.Tools.Pen
             _isPanning = false;
         }
 
-        private void SetPixel(int x, int y)
+        private void SetPixel(int x, int y, ILockedFramebuffer lockedBitmap)
         {
             byte R = _settings.Color.Item1;
             byte G = _settings.Color.Item2;
             byte B = _settings.Color.Item3;
 
-            using (var lockedBitmap = _bitmap.Lock())
+            int rowBytes = lockedBitmap.RowBytes;
+
+            nint ptr = lockedBitmap.Address;
+
+            unsafe
             {
-                int rowBytes = lockedBitmap.RowBytes;
+                byte* rowPointer = (byte*)ptr + y * rowBytes;
+                byte* pixelPointer = rowPointer + x * 4;
 
-                nint ptr = lockedBitmap.Address;
+                byte bgB = pixelPointer[0];
+                byte bgG = pixelPointer[1];
+                byte bgR = pixelPointer[2];
+                byte bgA = pixelPointer[3];
 
-                unsafe
-                {
-                    byte* rowPointer = (byte*)ptr + y * rowBytes;
-                    byte* pixelPointer = rowPointer + x * 4;
+                double srcAlpha = _settings.Opacity / 255.0;
+                double invSrcAlpha = 1.0 - srcAlpha;
+                
+                byte newB = (byte)(B * srcAlpha + bgB * invSrcAlpha);
+                byte newG = (byte)(G * srcAlpha + bgG * invSrcAlpha);
+                byte newR = (byte)(R * srcAlpha + bgR * invSrcAlpha);
 
-                    byte bgB = pixelPointer[0];
-                    byte bgG = pixelPointer[1];
-                    byte bgR = pixelPointer[2];
-                    byte bgA = pixelPointer[3];
+                double bgAlphaNorm = bgA / 255.0;
+                byte newA = (byte)((srcAlpha + bgAlphaNorm * invSrcAlpha) * 255);
 
-                    double srcAlpha = _settings.Opacity / 255.0;
-                    double invSrcAlpha = 1.0 - srcAlpha;
-
-                    byte newB = (byte)(B * srcAlpha + bgB * invSrcAlpha);
-                    byte newG = (byte)(G * srcAlpha + bgG * invSrcAlpha);
-                    byte newR = (byte)(R * srcAlpha + bgR * invSrcAlpha);
-
-                    double bgAlphaNorm = bgA / 255.0;
-                    byte newA = (byte)((srcAlpha + bgAlphaNorm * invSrcAlpha) * 255);
-
-                    pixelPointer[0] = newB;
-                    pixelPointer[1] = newG;
-                    pixelPointer[2] = newR;
-                    pixelPointer[3] = newA;
-                }
+                pixelPointer[0] = newB;
+                pixelPointer[1] = newG;
+                pixelPointer[2] = newR;
+                pixelPointer[3] = newA;
             }
         }
     }
