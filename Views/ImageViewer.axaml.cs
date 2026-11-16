@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using MiniShop.Factories;
 using MiniShop.Tools;
 using System;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace MiniShop.Views;
 
@@ -28,6 +27,10 @@ public partial class ImageViewer : UserControl
     private readonly TranslateTransform _translateTransform = new(0, 0);
     private ITool? _tool = null;
     private IToolsFactory _factory;
+    private WriteableBitmap? _currentLayer;
+    private Image _currentImage;
+
+    public event EventHandler<Bitmap>? ImageSelected;
 
     public ImageViewer()
     {
@@ -37,8 +40,17 @@ public partial class ImageViewer : UserControl
     
     public void SetTool(object? sender, ToolMode toolMode)
     {
-        if (Image.Source is WriteableBitmap bitmap)
-            _tool = _factory.CreateTool(toolMode, bitmap);
+        if (_currentLayer is not null)
+            _tool = _factory.CreateTool(toolMode, _currentLayer);
+    }
+    public void OnSetCurrentLayer(object? sender, WriteableBitmap currentLayer)
+    {
+        _currentLayer = currentLayer;
+        var image = new Image(){ Source = _currentLayer };
+        
+        _currentImage = image;
+        
+        ImageContainer.Children.Add(image);
     }
     private async void OnSelectImageClicked(object? sender, RoutedEventArgs e)
     {
@@ -69,7 +81,7 @@ public partial class ImageViewer : UserControl
                 PixelFormat.Bgra8888,
                 AlphaFormat.Premul
             );
-
+            
             using (var lockedFrame = writeableBitmap.Lock())
             {
                 originalBitmap.CopyPixels(
@@ -97,6 +109,8 @@ public partial class ImageViewer : UserControl
             ImageCanvas.RenderTransform = group;
 
             CenterImage();
+            
+            ImageSelected?.Invoke(this, writeableBitmap);
         }
     }
 
@@ -163,7 +177,7 @@ public partial class ImageViewer : UserControl
         var currentPoint = GetCurrentPoint(e);
 
         _tool.OnMoved(sender, e, currentPoint);
-        Image.InvalidateVisual();
+        _currentImage?.InvalidateVisual();
     }
 
     private void DefaultPointerMovedBehaviour(object? sender, PointerEventArgs e)

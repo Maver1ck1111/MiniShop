@@ -2,8 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:local="clr-namespace:MiniShop"
-			 Background="#262626"
+						 xmlns:local="clr-namespace:MiniShop"
+						 Background="#262626"
              x:Class="MiniShop.Views.ImageViewer">
 	<Grid>
 		<Border x:Name="ViewportBorder"
@@ -14,8 +14,10 @@
 				PointerMoved="OnCanvasPointerMoved">
 
 			<Canvas x:Name="ImageCanvas" RenderTransformOrigin="0,0">
-				<Image
-					x:Name="Image"/>
+				<Grid x:Name="ImageContainer">
+						<Image
+							x:Name="Image"/>
+				</Grid>
 			</Canvas>
 		</Border>
 

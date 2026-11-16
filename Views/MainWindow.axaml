@@ -12,6 +12,7 @@
 		<local:ToolsBar x:Name="ToolsBar" Grid.Column="0"/>
 		<local:ImageViewer x:Name="ImageViewer" Grid.Column="1"/>
 		<local:ToolsSettingsBar x:Name="SettingsBar" Grid.Column="2"/>
+		<local:LayersBar x:Name="LayersBar" />
 	</Grid>
 
 </Window>

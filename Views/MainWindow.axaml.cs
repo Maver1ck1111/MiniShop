@@ -11,6 +11,9 @@ public partial class MainWindow : Window
 
         ToolsBar.ToolSelected += ImageViewer.SetTool;
         ToolsBar.ToolSelected += UpdateToolsSettingsVisibility;
+        
+        LayersBar.SelectedLayer += ImageViewer.OnSetCurrentLayer;
+        ImageViewer.ImageSelected += LayersBar.OnImageSelected;
     }
 
     public void UpdateToolsSettingsVisibility(object? sender, ToolMode toolMode)
