@@ -9,22 +9,31 @@ public partial class ToolsBar : UserControl
 {
     public event EventHandler<ToolMode>? ToolSelected;
 
-    private bool _penSelected = false;
+    private bool _toolSelected = false;
     public ToolsBar()
     {
         InitializeComponent();
     }
 
-    private void OnPenSelected(object? sender, RoutedEventArgs e)
+    private void OnToolSelected(object? sender, RoutedEventArgs e)
     {
-        if (_penSelected) 
+        Button? button = null;
+        
+        if (sender is not Button) return;
+        
+        button = sender as Button;
+        
+        if (Enum.TryParse<ToolMode>(button.Name, ignoreCase: true, out var result))
         {
-            _penSelected = false;
-            ToolSelected?.Invoke(this, ToolMode.None);
-            return;
-        }
+            if (_toolSelected) 
+            {
+                _toolSelected = false;
+                ToolSelected?.Invoke(this, ToolMode.None);
+                return;
+            }
 
-        _penSelected = true;
-        ToolSelected?.Invoke(this, ToolMode.Pen);
+            _toolSelected = true;
+            ToolSelected?.Invoke(this, result);
+        } 
     }
 }

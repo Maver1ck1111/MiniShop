@@ -8,10 +8,10 @@
 	<Grid>
 		<Border x:Name="ViewportBorder"
         ClipToBounds="True"
-		PointerWheelChanged="OnCanvasPointerWheelChanged"
-		PointerReleased="OnCanvasPointerReleased"
-		PointerPressed="OnCanvasPointerPressed" 
-		PointerMoved="OnCanvasPointerMoved">
+				PointerWheelChanged="OnCanvasPointerWheelChanged"
+				PointerReleased="OnCanvasPointerReleased"
+				PointerPressed="OnCanvasPointerPressed" 
+				PointerMoved="OnCanvasPointerMoved">
 
 			<Canvas x:Name="ImageCanvas" RenderTransformOrigin="0,0">
 				<Image

@@ -4,15 +4,25 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 Background="#121212"
              x:Class="MiniShop.Views.ToolsBar">
-    <StackPanel
+	<StackPanel
 		Margin="5"
 		Spacing="5">
-		<Button
-		  Width="50"
-		  Height="50"
-		  Click="OnPenSelected">
+			<Button
+				x:Name="Pen"
+			  Width="50"
+			  Height="50"
+			  Click="OnToolSelected">
 
-			<Image Source="avares://MiniShop/Assets/Pen.png"/>
-		</Button>
+				<Image Source="avares://MiniShop/Assets/Pen.png"/>
+			</Button>
+	    	
+	    	<Button
+	    		x:Name="Shapes"
+				  Width="50"
+				  Height="50"
+				  Click="OnToolSelected">
+
+					<Image Source="avares://MiniShop/Assets/Shapes.png"/>
+			</Button>
 	</StackPanel>
 </UserControl>

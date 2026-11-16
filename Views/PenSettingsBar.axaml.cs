@@ -37,7 +37,9 @@ public partial class PenSettingsBar : UserControl
             if (Enum.TryParse<KnownColor>(penColor, out var knownKolor))
             {
                 var color = Color.FromKnownColor(knownKolor);
-                _penSettings.Color = (color.R, color.G, color.B);
+                _penSettings.Pixel.R = color.R;
+                _penSettings.Pixel.G = color.G;
+                _penSettings.Pixel.B = color.B;
             }
         }
     }
@@ -50,7 +52,7 @@ public partial class PenSettingsBar : UserControl
 
             if (int.TryParse(text, out var result) && result <= 100 && result >= 0)
             {
-                _penSettings.Opacity = (byte)((double)255 / 100 * result);
+                _penSettings.Pixel.Opacity = (byte)((double)255 / 100 * result);
                 return;
             }
 

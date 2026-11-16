@@ -22,6 +22,7 @@ public partial class ImageViewer : UserControl
     private double _actualHeight;
     private Point _startPoint;
     private bool _isPanning = false;
+    private bool _isWheelPressed = false;
 
     private readonly ScaleTransform _scaleTransform = new(1, 1);
     private readonly TranslateTransform _translateTransform = new(0, 0);
@@ -31,8 +32,9 @@ public partial class ImageViewer : UserControl
     public ImageViewer()
     {
         InitializeComponent();
-        _factory = App.ServiceProvider?.GetService<IToolsFactory>();
+        _factory = App.ServiceProvider.GetRequiredService<IToolsFactory>();
     }
+    
     public void SetTool(object? sender, ToolMode toolMode)
     {
         if (Image.Source is WriteableBitmap bitmap)
@@ -125,17 +127,24 @@ public partial class ImageViewer : UserControl
     }
     private void OnCanvasPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (_tool is null)
+        var properties = e.GetCurrentPoint(ViewportBorder).Properties;
+
+        if (properties.IsMiddleButtonPressed)
+            _isWheelPressed = true;
+        
+        if (_tool is null || _isWheelPressed)
         {
             DefaultPointerPressedBehaviour(sender, e);
             return;
         }
 
-        _tool.OnPressed(sender, e);
+        var currentPoint = GetCurrentPoint(e);
+        
+        _tool.OnPressed(sender, e, currentPoint);
     }
     private void OnCanvasPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        if (_tool is null)
+        if (_tool is null || _isWheelPressed)
         {
             DefaultPointerReleasedBehaviour(sender, e);
             return;
@@ -143,23 +152,17 @@ public partial class ImageViewer : UserControl
 
         _tool.OnReleased(sender, e);
     }
-
     private void OnCanvasPointerMoved(object? sender, PointerEventArgs e)
     {
-        if (_tool is null)
+        if (_tool is null || _isWheelPressed)
         {
             DefaultPointerMovedBehaviour(sender, e);
             return;
         }
 
-        var mousePos = e.GetPosition(ViewportBorder);
+        var currentPoint = GetCurrentPoint(e);
 
-        double pointX = Math.Abs(_translateTransform.X - mousePos.X) / _currentScale;
-        double pointY = Math.Abs(_translateTransform.Y - mousePos.Y) / _currentScale;
-
-        var actualPoin = new Point(pointX, pointY);
-
-        _tool.OnMoved(sender, e, actualPoin);
+        _tool.OnMoved(sender, e, currentPoint);
         Image.InvalidateVisual();
     }
 
@@ -180,13 +183,14 @@ public partial class ImageViewer : UserControl
     }
     private void DefaultPointerReleasedBehaviour(object? sender, PointerReleasedEventArgs e)
     {
-        if (_isPanning)
+        if (_isPanning && _isWheelPressed)
         {
+            _isWheelPressed = false;
             _isPanning = false;
             e.Pointer.Capture(null);
         }
     }
-    private void DefaultPointerPressedBehaviour(object? sender, PointerPressedEventArgs e)
+    private void DefaultPointerPressedBehaviour(object? sender, PointerPressedEventArgs e) 
     {
         var properties = e.GetCurrentPoint(ViewportBorder).Properties;
 
@@ -195,6 +199,16 @@ public partial class ImageViewer : UserControl
         _isPanning = true;
         _startPoint = e.GetPosition(ViewportBorder);
         e.Pointer.Capture(ViewportBorder);
+    }
+    
+    private Point GetCurrentPoint(PointerEventArgs e)
+    {
+        var mousePos = e.GetPosition(ViewportBorder);
+
+        double pointX = Math.Abs(_translateTransform.X - mousePos.X) / _currentScale;
+        double pointY = Math.Abs(_translateTransform.Y - mousePos.Y) / _currentScale;
+
+        return new Point(pointX, pointY);
     }
     private void CenterImage()
     {
@@ -223,7 +237,6 @@ public partial class ImageViewer : UserControl
             _translateTransform.Y = Math.Clamp(_translateTransform.Y, minY, maxY);
         }
     }
-
     private bool IsTheHolePictureOnTheScreen()
     {
         return _actualWidth < ViewportBorder.Bounds.Width && _actualHeight < ViewportBorder.Bounds.Height;

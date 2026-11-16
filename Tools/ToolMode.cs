@@ -9,6 +9,7 @@ namespace MiniShop.Tools
     public enum ToolMode
     {
         None = 0,
-        Pen = 1
+        Pen = 1,
+        Shapes = 2
     }
 }
