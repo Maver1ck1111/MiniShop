@@ -1,22 +1,22 @@
 using Avalonia.Controls;
+using Microsoft.Extensions.DependencyInjection;
+using MiniShop.ObservableStateServices;
 using MiniShop.Tools;
 
 namespace MiniShop.Views;
 
 public partial class MainWindow : Window
 {
+    private readonly IToolsStateService _toolsService;
     public MainWindow()
     {
         InitializeComponent();
 
-        ToolsBar.ToolSelected += ImageViewer.SetTool;
-        ToolsBar.ToolSelected += UpdateToolsSettingsVisibility;
-        
-        LayersBar.SelectedLayer += ImageViewer.OnSetCurrentLayer;
-        ImageViewer.ImageSelected += LayersBar.OnImageSelected;
+        _toolsService = App.ServiceProvider.GetRequiredService<IToolsStateService>();
+        _toolsService.ToolChanged += UpdateToolsSettingsVisibility;
     }
 
-    public void UpdateToolsSettingsVisibility(object? sender, ToolMode toolMode)
+    public void UpdateToolsSettingsVisibility(ToolMode toolMode)
     {
         if (toolMode == ToolMode.None)
         {
@@ -29,5 +29,4 @@ public partial class MainWindow : Window
             SettingsBar.IsVisible = true;
         }
     }
-
 }

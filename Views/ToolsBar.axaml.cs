@@ -1,18 +1,21 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Microsoft.Extensions.DependencyInjection;
+using MiniShop.ObservableStateServices;
 using MiniShop.Tools;
 using System;
 
 namespace MiniShop.Views;
 
 public partial class ToolsBar : UserControl
-{
-    public event EventHandler<ToolMode>? ToolSelected;
-
+{   
     private bool _toolSelected = false;
+    private IToolsStateService _servcice;
+    
     public ToolsBar()
     {
         InitializeComponent();
+        _servcice = App.ServiceProvider.GetRequiredService<IToolsStateService>();
     }
 
     private void OnToolSelected(object? sender, RoutedEventArgs e)
@@ -28,12 +31,12 @@ public partial class ToolsBar : UserControl
             if (_toolSelected) 
             {
                 _toolSelected = false;
-                ToolSelected?.Invoke(this, ToolMode.None);
+                _servcice.SetTool(result);
                 return;
             }
 
             _toolSelected = true;
-            ToolSelected?.Invoke(this, result);
+            _servcice.SetTool(result);
         } 
     }
 }

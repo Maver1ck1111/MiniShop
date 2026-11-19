@@ -3,6 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using MiniShop.Factories;
+using MiniShop.ObservableStateServices;
 using MiniShop.Tools;
 using MiniShop.Views;
 using System;
@@ -21,6 +22,8 @@ public partial class App : Application
         services.AddTransient<IToolsFactory, ToolsFactory>();
         services.AddSingleton<ToolsSettings>();
 
+        services.AddSingleton<IToolsStateService, ToolStateService>();
+        services.AddSingleton<ILayersStateService, LayerStateService>();
         ServiceProvider = services.BuildServiceProvider();
     }
 

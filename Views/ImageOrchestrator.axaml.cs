@@ -8,12 +8,13 @@ using Avalonia.Platform;
 using Avalonia.Platform.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using MiniShop.Factories;
+using MiniShop.ObservableStateServices;
 using MiniShop.Tools;
 using System;
 
 namespace MiniShop.Views;
 
-public partial class ImageViewer : UserControl
+public partial class ImageOrchestrator : UserControl
 {
     private readonly double _zoomFactor = 1.15;
     private double _currentScale = 1;
@@ -26,32 +27,36 @@ public partial class ImageViewer : UserControl
     private readonly ScaleTransform _scaleTransform = new(1, 1);
     private readonly TranslateTransform _translateTransform = new(0, 0);
     private ITool? _tool = null;
-    private IToolsFactory _factory;
-    private WriteableBitmap? _currentLayer;
     private Image _currentImage;
+    private readonly IToolsStateService _toolsService;
+    private readonly ILayersStateService _layerService; 
 
-    public event EventHandler<Bitmap>? ImageSelected;
-
-    public ImageViewer()
+    public ImageOrchestrator()
     {
-        InitializeComponent();
-        _factory = App.ServiceProvider.GetRequiredService<IToolsFactory>();
+        InitializeComponent();        
+        _toolsService = App.ServiceProvider.GetRequiredService<IToolsStateService>();
+        _layerService = App.ServiceProvider.GetRequiredService<ILayersStateService>();
+        
+        _tool = _toolsService.SelectedTool;
+        
+        _layerService.LayerChanged += OnSetCurrentLayer;
+        _toolsService.ToolChanged += OnSetTool;
     }
     
-    public void SetTool(object? sender, ToolMode toolMode)
+    public void OnSetTool(ToolMode mode)
     {
-        if (_currentLayer is not null)
-            _tool = _factory.CreateTool(toolMode, _currentLayer);
+        _tool = _toolsService.SelectedTool;
     }
-    public void OnSetCurrentLayer(object? sender, WriteableBitmap currentLayer)
+    
+    public void OnSetCurrentLayer(WriteableBitmap currentLayer)
     {
-        _currentLayer = currentLayer;
-        var image = new Image(){ Source = _currentLayer };
+        var image = new Image(){ Source = currentLayer };
         
         _currentImage = image;
         
         ImageContainer.Children.Add(image);
     }
+    
     private async void OnSelectImageClicked(object? sender, RoutedEventArgs e)
     {
         var toplevel = TopLevel.GetTopLevel(this);
@@ -110,7 +115,7 @@ public partial class ImageViewer : UserControl
 
             CenterImage();
             
-            ImageSelected?.Invoke(this, writeableBitmap);
+            _layerService.SetLayer(writeableBitmap);
         }
     }
 

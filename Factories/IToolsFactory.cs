@@ -1,15 +1,9 @@
-﻿using Avalonia.Media.Imaging;
-using MiniShop.Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MiniShop.Tools;
 
 namespace MiniShop.Factories
 {
     public interface IToolsFactory
     {
-        public ITool? CreateTool(ToolMode mode, WriteableBitmap bitmap);
+        public ITool? CreateTool(ToolMode mode);
     }
 }

@@ -4,6 +4,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Microsoft.Extensions.DependencyInjection;
+using MiniShop.ObservableStateServices;
 
 namespace MiniShop.Views;
 
@@ -11,11 +13,12 @@ public partial class LayersBar : UserControl
 {
     private Bitmap _originalPicture;
     private readonly List<WriteableBitmap> _layers = new();
-    public event EventHandler<WriteableBitmap>? SelectedLayer;
+    private ILayersStateService _layerService;
     
     public LayersBar()
     {
         InitializeComponent();
+        _layerService = App.ServiceProvider.GetRequiredService<ILayersStateService>();
     }
     
     public void OnImageSelected(object? sender, Bitmap picture)
@@ -44,6 +47,6 @@ public partial class LayersBar : UserControl
             
         _layers.Add(writeableBitmap);
             
-        SelectedLayer?.Invoke(this, writeableBitmap);
+        _layerService.SetLayer(writeableBitmap);
     }
 }
