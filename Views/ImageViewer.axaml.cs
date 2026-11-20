@@ -9,12 +9,13 @@ using Avalonia.Platform.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using MiniShop.Factories;
 using MiniShop.ObservableStateServices;
+using MiniShop.Services;
 using MiniShop.Tools;
 using System;
 
 namespace MiniShop.Views;
 
-public partial class ImageOrchestrator : UserControl
+public partial class ImageViewer : UserControl
 {
     private readonly double _zoomFactor = 1.15;
     private double _currentScale = 1;
@@ -28,14 +29,16 @@ public partial class ImageOrchestrator : UserControl
     private readonly TranslateTransform _translateTransform = new(0, 0);
     private ITool? _tool = null;
     private Image _currentImage;
-    private readonly IToolsStateService _toolsService;
-    private readonly ILayersStateService _layerService; 
+    private readonly IToolStateService _toolsService;
+    private readonly ILayerStateService _layerService;
+    private readonly IDialogService _dialogService;
 
-    public ImageOrchestrator()
+    public ImageViewer()
     {
         InitializeComponent();        
-        _toolsService = App.ServiceProvider.GetRequiredService<IToolsStateService>();
-        _layerService = App.ServiceProvider.GetRequiredService<ILayersStateService>();
+        _toolsService = App.ServiceProvider.GetRequiredService<IToolStateService>();
+        _layerService = App.ServiceProvider.GetRequiredService<ILayerStateService>();
+        _dialogService = App.ServiceProvider.GetRequiredService<IDialogService>();
         
         _tool = _toolsService.SelectedTool;
         
@@ -59,64 +62,29 @@ public partial class ImageOrchestrator : UserControl
     
     private async void OnSelectImageClicked(object? sender, RoutedEventArgs e)
     {
-        var toplevel = TopLevel.GetTopLevel(this);
-        if (toplevel == null) return;
+        WriteableBitmap? writeableBitmap = await _dialogService.SelectImage(this);
+        
+        if (writeableBitmap is null) return;
 
-        var files = await toplevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions()
-        {
-            AllowMultiple = false,
-            Title = "Choose your pictire",
-            FileTypeFilter = new[]
-            {
-                FilePickerFileTypes.ImageAll
-            }
-        });
+        Image.Source = writeableBitmap;
 
-        if (files.Count > 0)
-        {
-            var file = files[0];
+        SelectImageButton.IsVisible = false;
 
-            await using var stream = await file.OpenReadAsync();
+        _actualHeight = writeableBitmap.Size.Height;
+        _actualWidth = writeableBitmap.Size.Width;
 
-            var originalBitmap = new Bitmap(stream);
+        Loaded += (s, e) => CenterImage();
+        ViewportBorder.SizeChanged += (s, e) => CenterImage();
 
-            var writeableBitmap = new WriteableBitmap(
-                new PixelSize((int)originalBitmap.Size.Width, (int)originalBitmap.Size.Height),
-                new Vector(96, 96),
-                PixelFormat.Bgra8888,
-                AlphaFormat.Premul
-            );
+        var group = new TransformGroup();
+        group.Children.Add(_scaleTransform);
+        group.Children.Add(_translateTransform);
+
+        ImageCanvas.RenderTransform = group;
+
+        CenterImage();
             
-            using (var lockedFrame = writeableBitmap.Lock())
-            {
-                originalBitmap.CopyPixels(
-                    new PixelRect(0, 0, writeableBitmap.PixelSize.Width, writeableBitmap.PixelSize.Height),
-                    lockedFrame.Address,
-                    lockedFrame.Size.Height * lockedFrame.RowBytes,
-                    lockedFrame.RowBytes
-                );
-            }
-
-            Image.Source = writeableBitmap;
-
-            SelectImageButton.IsVisible = false;
-
-            _actualHeight = originalBitmap.Size.Height;
-            _actualWidth = originalBitmap.Size.Width;
-
-            Loaded += (s, e) => CenterImage();
-            ViewportBorder.SizeChanged += (s, e) => CenterImage();
-
-            var group = new TransformGroup();
-            group.Children.Add(_scaleTransform);
-            group.Children.Add(_translateTransform);
-
-            ImageCanvas.RenderTransform = group;
-
-            CenterImage();
-            
-            _layerService.SetLayer(writeableBitmap);
-        }
+        _layerService.SetLayer(writeableBitmap);
     }
 
     private void OnCanvasPointerWheelChanged(object? sender, PointerWheelEventArgs e)

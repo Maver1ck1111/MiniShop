@@ -4,7 +4,7 @@ using MiniShop.Tools;
 
 namespace MiniShop.ObservableStateServices;
 
-public class ToolStateService(IToolsFactory _factory) : IToolsStateService
+public class ToolStateService(IToolsFactory _factory) : IToolStateService
 {
     public ITool? SelectedTool { get; private set;}
 

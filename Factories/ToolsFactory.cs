@@ -10,7 +10,7 @@ namespace MiniShop.Factories
     public class ToolsFactory(
         ToolsSettings _settings, 
         IServiceProvider _serviceProvider, 
-        ILayersStateService _layersService) : IToolsFactory
+        ILayerStateService _layersService) : IToolsFactory
     {
 
         public ITool? CreateTool(ToolMode mode)

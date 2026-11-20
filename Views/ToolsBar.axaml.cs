@@ -10,12 +10,12 @@ namespace MiniShop.Views;
 public partial class ToolsBar : UserControl
 {   
     private bool _toolSelected = false;
-    private IToolsStateService _servcice;
+    private IToolStateService _servcice;
     
     public ToolsBar()
     {
         InitializeComponent();
-        _servcice = App.ServiceProvider.GetRequiredService<IToolsStateService>();
+        _servcice = App.ServiceProvider.GetRequiredService<IToolStateService>();
     }
 
     private void OnToolSelected(object? sender, RoutedEventArgs e)

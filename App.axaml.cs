@@ -4,6 +4,7 @@ using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using MiniShop.Factories;
 using MiniShop.ObservableStateServices;
+using MiniShop.Services;
 using MiniShop.Tools;
 using MiniShop.Views;
 using System;
@@ -20,10 +21,11 @@ public partial class App : Application
         var services = new ServiceCollection();
 
         services.AddTransient<IToolsFactory, ToolsFactory>();
+        services.AddTransient<IDialogService, DialogService>();
         services.AddSingleton<ToolsSettings>();
 
-        services.AddSingleton<IToolsStateService, ToolStateService>();
-        services.AddSingleton<ILayersStateService, LayerStateService>();
+        services.AddSingleton<IToolStateService, ToolStateService>();
+        services.AddSingleton<ILayerStateService, LayerStateService>();
         ServiceProvider = services.BuildServiceProvider();
     }
 

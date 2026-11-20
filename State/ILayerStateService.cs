@@ -3,7 +3,7 @@ using Avalonia.Media.Imaging;
 
 namespace MiniShop.ObservableStateServices;
 
-public interface ILayersStateService
+public interface ILayerStateService
 {
     WriteableBitmap? SelectedLayer { get; }
     event Action<WriteableBitmap> LayerChanged;

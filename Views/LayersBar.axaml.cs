@@ -13,12 +13,12 @@ public partial class LayersBar : UserControl
 {
     private Bitmap _originalPicture;
     private readonly List<WriteableBitmap> _layers = new();
-    private ILayersStateService _layerService;
+    private ILayerStateService _layerService;
     
     public LayersBar()
     {
         InitializeComponent();
-        _layerService = App.ServiceProvider.GetRequiredService<ILayersStateService>();
+        _layerService = App.ServiceProvider.GetRequiredService<ILayerStateService>();
     }
     
     public void OnImageSelected(object? sender, Bitmap picture)

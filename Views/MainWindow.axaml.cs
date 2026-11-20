@@ -7,12 +7,12 @@ namespace MiniShop.Views;
 
 public partial class MainWindow : Window
 {
-    private readonly IToolsStateService _toolsService;
+    private readonly IToolStateService _toolsService;
     public MainWindow()
     {
         InitializeComponent();
 
-        _toolsService = App.ServiceProvider.GetRequiredService<IToolsStateService>();
+        _toolsService = App.ServiceProvider.GetRequiredService<IToolStateService>();
         _toolsService.ToolChanged += UpdateToolsSettingsVisibility;
     }
 
