@@ -1,7 +1,5 @@
 ﻿using System;
-using Avalonia.Media.Imaging;
 using Microsoft.Extensions.DependencyInjection;
-using MiniShop.ObservableStateServices;
 using MiniShop.Tools;
 using MiniShop.Tools.Pen;
 

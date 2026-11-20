@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 						 xmlns:local="clr-namespace:MiniShop"
+						 xmlns:views="clr-namespace:MiniShop.Views"
 						 Background="#262626"
              x:Class="MiniShop.Views.ImageViewer">
 	<Grid>
@@ -18,6 +19,9 @@
 						<Image
 							x:Name="Image"/>
 				</Grid>
+				
+				<views:PreviewOverlay x:Name="PreviewOverlay"/>
+				
 			</Canvas>
 		</Border>
 

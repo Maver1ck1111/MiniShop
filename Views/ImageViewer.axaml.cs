@@ -1,13 +1,11 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using Avalonia.Platform;
-using Avalonia.Platform.Storage;
 using Microsoft.Extensions.DependencyInjection;
-using MiniShop.Factories;
 using MiniShop.ObservableStateServices;
 using MiniShop.Services;
 using MiniShop.Tools;
@@ -33,7 +31,8 @@ public partial class ImageViewer : UserControl
     private readonly ILayerStateService _layerService;
     private readonly IDialogService _dialogService;
     private readonly IBitMapService _bitMapService;
-
+    private readonly Polyline _polyline;
+    
     public ImageViewer()
     {
         InitializeComponent();        
@@ -46,6 +45,9 @@ public partial class ImageViewer : UserControl
         
         _layerService.LayerChanged += OnSetCurrentLayer;
         _toolsService.ToolChanged += OnSetTool;
+
+        _polyline = new Polyline();
+        ImageCanvas.Children.Add(_polyline);
     }
     
     public void OnSetTool(ToolMode mode)
@@ -86,7 +88,7 @@ public partial class ImageViewer : UserControl
 
         CenterImage();
             
-        _layerService.SetNewLayer(_bitMapService.ClearBitMap(writeableBitmap));
+        _layerService.SetNewLayer(_bitMapService.CreateEmptyMap(writeableBitmap));
     }
 
     private void OnCanvasPointerWheelChanged(object? sender, PointerWheelEventArgs e)
@@ -128,8 +130,9 @@ public partial class ImageViewer : UserControl
         }
 
         var currentPoint = GetCurrentPoint(e);
-        
         _tool.OnPressed(sender, e, currentPoint);
+        
+        PreviewOverlay.SelectedTool = _tool;
     }
     private void OnCanvasPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
@@ -138,8 +141,12 @@ public partial class ImageViewer : UserControl
             DefaultPointerReleasedBehaviour(sender, e);
             return;
         }
-
-        _tool.OnReleased(sender, e);
+        
+        var position = GetCurrentPoint(e);
+        
+        _tool.OnReleased(sender, e, position);
+        PreviewOverlay.InvalidateVisual();
+        _currentImage?.InvalidateVisual();
     }
     private void OnCanvasPointerMoved(object? sender, PointerEventArgs e)
     {
@@ -152,7 +159,8 @@ public partial class ImageViewer : UserControl
         var currentPoint = GetCurrentPoint(e);
 
         _tool.OnMoved(sender, e, currentPoint);
-        _currentImage?.InvalidateVisual();
+
+        PreviewOverlay.InvalidateVisual();
     }
 
     private void DefaultPointerMovedBehaviour(object? sender, PointerEventArgs e)

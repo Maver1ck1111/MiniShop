@@ -11,14 +11,9 @@
             Text="Choose pen size"
             FontSize="14"/>
 		
-		<ComboBox x:Name="PenSizeComboBox" SelectionChanged="PenPixelSizeChangedBox">
-			<ComboBoxItem Content="1"/>
-			<ComboBoxItem Content="4"/>
-			<ComboBoxItem Content="16"/>
-			<ComboBoxItem Content="25"/>
-			<ComboBoxItem Content="64"/>
-		</ComboBox>
-
+		<TextBox 
+			x:Name="PenSizeBox"
+			TextChanged="OnSizeChanged" />
 
 		<ComboBox x:Name="PenColorComboBox" SelectionChanged="PenColorChangedBox">
 			<ComboBoxItem Content="Black"/>
@@ -35,7 +30,7 @@
 		
 		<TextBox 
 			x:Name="OpacityTexBox"
-			TextChanged="OnTextChanged" />
+			TextChanged="OnOpacityChanged" />
 		
 	</StackPanel>
 

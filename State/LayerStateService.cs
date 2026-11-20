@@ -9,9 +9,9 @@ public class LayerStateService : ILayerStateService
 {
     public WriteableBitmap? SelectedLayer { get; private set; }
 
-    public IReadOnlyList<WriteableBitmap> Layers { get => editableLayers.AsReadOnly(); }
+    public IReadOnlyList<WriteableBitmap> Layers { get => _layers.AsReadOnly(); }
 
-    private List<WriteableBitmap> editableLayers { get; set; } = new List<WriteableBitmap>();
+    private List<WriteableBitmap> _layers { get; set; } = new List<WriteableBitmap>();
     
     public event Action<WriteableBitmap> LayerChanged;
 
@@ -24,7 +24,7 @@ public class LayerStateService : ILayerStateService
     public void SetNewLayer(WriteableBitmap layer)
     {
         SelectedLayer = layer;
-        editableLayers.Add(SelectedLayer);
+        _layers.Add(SelectedLayer);
         LayerChanged.Invoke(SelectedLayer);
     }
 }

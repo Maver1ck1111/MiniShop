@@ -15,17 +15,22 @@ public partial class PenSettingsBar : UserControl
         InitializeComponent();
 
         _penSettings = App.ServiceProvider.GetService<ToolsSettings>()?.PenSettings;
-        PenSizeComboBox.SelectedIndex = 0;
         PenColorComboBox.SelectedIndex = 0;
         OpacityTexBox.Text = "100";
+        PenSizeBox.Text = "1";
     }
 
-    private void PenPixelSizeChangedBox(object? sender, SelectionChangedEventArgs e)
+    private void OnSizeChanged(object? sender, TextChangedEventArgs e)
     {
-        if (PenSizeComboBox.SelectedItem is ComboBoxItem selectedItem)
+        if (sender is TextBox textBox)
         {
-            string? pixelSize = selectedItem.Content?.ToString();
-            _penSettings.PixelSize = int.Parse(pixelSize);
+            if (int.TryParse(textBox.Text, out var result))
+            {
+                _penSettings.PenThickness = result;
+                return;
+            }
+            
+            textBox.Text = "1";
         }
     }
 
@@ -44,7 +49,7 @@ public partial class PenSettingsBar : UserControl
         }
     }
 
-    private void OnTextChanged(object? sender, TextChangedEventArgs e)
+    private void OnOpacityChanged(object? sender, TextChangedEventArgs e)
     {
         if (sender is TextBox textBlock)
         {
