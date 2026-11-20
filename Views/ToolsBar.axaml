@@ -2,27 +2,37 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 Background="#121212"
              x:Class="MiniShop.Views.ToolsBar">
-	<StackPanel
-		Margin="5"
-		Spacing="5">
-			<Button
-				x:Name="Pen"
-			  Width="50"
-			  Height="50"
-			  Click="OnToolSelected">
-
-				<Image Source="avares://MiniShop/Assets/Pen.png"/>
+	<Border Background="#121212"
+	        BorderBrush="#2A2A2A"
+	        BorderThickness="0,0,1,0"
+	        Padding="8">
+		<StackPanel VerticalAlignment="Center"
+		            HorizontalAlignment="Center"
+		            Spacing="8">
+			<Button x:Name="Pen"
+			        Width="42"
+			        Height="42"
+			        Padding="8"
+			        CornerRadius="8"
+			        Background="#1E1E1E"
+			        ToolTip.Tip="Pen"
+			        Click="OnToolSelected">
+				<Image Source="avares://MiniShop/Assets/Pen.png"
+				       Stretch="Uniform"/>
 			</Button>
-	    	
-	    	<Button
-	    		x:Name="Shapes"
-				  Width="50"
-				  Height="50"
-				  Click="OnToolSelected">
 
-					<Image Source="avares://MiniShop/Assets/Shapes.png"/>
+			<Button x:Name="Shapes"
+			        Width="42"
+			        Height="42"
+			        Padding="8"
+			        CornerRadius="8"
+			        Background="#1E1E1E"
+			        ToolTip.Tip="Shapes"
+			        Click="OnToolSelected">
+				<Image Source="avares://MiniShop/Assets/Shapes.png"
+				       Stretch="Uniform"/>
 			</Button>
-	</StackPanel>
+		</StackPanel>
+	</Border>
 </UserControl>

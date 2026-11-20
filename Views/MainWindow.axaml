@@ -4,9 +4,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 				xmlns:local="clr-namespace:MiniShop.Views"
         x:Class="MiniShop.Views.MainWindow"
-        Title="MiniShop">
+        Title="MiniShop"
+        WindowState="Maximized">
 	
-	<Grid ColumnDefinitions="1*, 8*, Auto" 
+	<Grid ColumnDefinitions="Auto, *, Auto" 
           RowDefinitions="1*"
 		  x:Name="MainGrid">
 		<local:ToolsBar x:Name="ToolsBar" Grid.Column="0"/>

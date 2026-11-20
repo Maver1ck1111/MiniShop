@@ -25,7 +25,7 @@ public partial class MainWindow : Window
         } 
         else
         {
-            MainGrid.ColumnDefinitions[2].Width = new GridLength(1, GridUnitType.Star);
+            MainGrid.ColumnDefinitions[2].Width = GridLength.Auto;
             SettingsBar.IsVisible = true;
         }
     }

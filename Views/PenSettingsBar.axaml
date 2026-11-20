@@ -3,35 +3,66 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              x:Class="MiniShop.Views.PenSettingsBar">
-	
-	<StackPanel 
-		Spacing="5">
-		<TextBlock 
-			x:Name="PixelSizeBlock"
-            Text="Choose pen size"
-            FontSize="14"/>
-		
-		<TextBox 
-			x:Name="PenSizeBox"
-			TextChanged="OnSizeChanged" />
 
-		<ComboBox x:Name="PenColorComboBox" SelectionChanged="PenColorChangedBox">
-			<ComboBoxItem Content="Black"/>
-			<ComboBoxItem Content="Red"/>
-			<ComboBoxItem Content="White"/>
-			<ComboBoxItem Content="Yellow"/>
-			<ComboBoxItem Content="Green"/>
-		</ComboBox>
+	<StackPanel Spacing="16">
+		<TextBlock Text="Pen Settings"
+		           FontSize="15"
+		           FontWeight="SemiBold"
+		           Foreground="#FFFFFF"/>
 
-		<TextBlock
-			x:Name="OpacityBlock"
-			Text="Choose Opacity"
-			FontSize="14"/>
-		
-		<TextBox 
-			x:Name="OpacityTexBox"
-			TextChanged="OnOpacityChanged" />
-		
+		<StackPanel Spacing="6">
+			<TextBlock x:Name="PixelSizeBlock"
+			           Text="Size (1 - 100 px)"
+			           FontSize="12"
+			           Foreground="#A0A0A0"/>
+
+			<TextBox x:Name="PenSizeBox"
+			         MaxLength="3"
+			         CornerRadius="6"
+			         Background="#1E1E1E"
+			         BorderBrush="#2E2E2E"
+			         Padding="10,7"
+			         Watermark="1 - 100"
+			         TextChanged="OnSizeChanged"
+			         LostFocus="OnSizeLostFocus"/>
+		</StackPanel>
+
+		<StackPanel Spacing="6">
+			<TextBlock Text="Color"
+			           FontSize="12"
+			           Foreground="#A0A0A0"/>
+
+			<ComboBox x:Name="PenColorComboBox"
+			          HorizontalAlignment="Stretch"
+			          CornerRadius="6"
+			          Background="#1E1E1E"
+			          BorderBrush="#2E2E2E"
+			          Padding="10,7"
+			          SelectionChanged="PenColorChangedBox">
+				<ComboBoxItem Content="Black"/>
+				<ComboBoxItem Content="Red"/>
+				<ComboBoxItem Content="White"/>
+				<ComboBoxItem Content="Yellow"/>
+				<ComboBoxItem Content="Green"/>
+			</ComboBox>
+		</StackPanel>
+
+		<StackPanel Spacing="6">
+			<TextBlock x:Name="OpacityBlock"
+			           Text="Opacity (0 - 100%)"
+			           FontSize="12"
+			           Foreground="#A0A0A0"/>
+
+			<TextBox x:Name="OpacityTexBox"
+			         MaxLength="3"
+			         CornerRadius="6"
+			         Background="#1E1E1E"
+			         BorderBrush="#2E2E2E"
+			         Padding="10,7"
+			         Watermark="0 - 100"
+			         TextChanged="OnOpacityChanged"
+			         LostFocus="OnOpacityLostFocus"/>
+		</StackPanel>
 	</StackPanel>
 
 </UserControl>

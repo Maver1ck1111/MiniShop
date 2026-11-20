@@ -2,11 +2,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:local="clr-namespace:MiniShop.Views"
-			 Background="#121212"
-			 x:Name="SettingsBar"
+             xmlns:local="clr-namespace:MiniShop.Views"
+             x:Name="SettingsBar"
              x:Class="MiniShop.Views.ToolsSettingsBar">
-	
-	<local:PenSettingsBar />
-	
+
+	<Border Width="220"
+	        Background="#121212"
+	        BorderBrush="#2A2A2A"
+	        BorderThickness="1,0,0,0"
+	        Padding="16">
+		<local:PenSettingsBar />
+	</Border>
+
 </UserControl>
