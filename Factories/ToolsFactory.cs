@@ -9,17 +9,14 @@ namespace MiniShop.Factories
 {
     public class ToolsFactory(
         ToolsSettings _settings, 
-        IServiceProvider _serviceProvider, 
-        ILayerStateService _layersService) : IToolsFactory
+        IServiceProvider _serviceProvider) : IToolsFactory
     {
 
         public ITool? CreateTool(ToolMode mode)
-        {
-            if (_layersService.SelectedLayer is null) return null;
-            
+        {   
             return mode switch
             {
-                ToolMode.Pen => ActivatorUtilities.CreateInstance<Pen>(_serviceProvider, _settings.PenSettings, _layersService.SelectedLayer),
+                ToolMode.Pen => ActivatorUtilities.CreateInstance<Pen>(_serviceProvider, _settings.PenSettings),
                 _ => null
             };
         }

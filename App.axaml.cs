@@ -22,8 +22,9 @@ public partial class App : Application
 
         services.AddTransient<IToolsFactory, ToolsFactory>();
         services.AddTransient<IDialogService, DialogService>();
+        services.AddTransient<IBitMapService, BitMapService>();
+        
         services.AddSingleton<ToolsSettings>();
-
         services.AddSingleton<IToolStateService, ToolStateService>();
         services.AddSingleton<ILayerStateService, LayerStateService>();
         ServiceProvider = services.BuildServiceProvider();

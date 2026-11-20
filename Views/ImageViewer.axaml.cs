@@ -32,6 +32,7 @@ public partial class ImageViewer : UserControl
     private readonly IToolStateService _toolsService;
     private readonly ILayerStateService _layerService;
     private readonly IDialogService _dialogService;
+    private readonly IBitMapService _bitMapService;
 
     public ImageViewer()
     {
@@ -39,6 +40,7 @@ public partial class ImageViewer : UserControl
         _toolsService = App.ServiceProvider.GetRequiredService<IToolStateService>();
         _layerService = App.ServiceProvider.GetRequiredService<ILayerStateService>();
         _dialogService = App.ServiceProvider.GetRequiredService<IDialogService>();
+        _bitMapService = App.ServiceProvider.GetRequiredService<IBitMapService>();
         
         _tool = _toolsService.SelectedTool;
         
@@ -84,7 +86,7 @@ public partial class ImageViewer : UserControl
 
         CenterImage();
             
-        _layerService.SetLayer(writeableBitmap);
+        _layerService.SetNewLayer(_bitMapService.ClearBitMap(writeableBitmap));
     }
 
     private void OnCanvasPointerWheelChanged(object? sender, PointerWheelEventArgs e)

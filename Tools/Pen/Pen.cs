@@ -3,12 +3,13 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using MiniShop.ObservableStateServices;
 using MiniShop.Tools.Common;
 using System;
 
 namespace MiniShop.Tools.Pen
 {
-    public class Pen(PenSettings _settings, WriteableBitmap _bitmap) : Tool(_bitmap)
+    public class Pen(PenSettings _settings, ILayerStateService _layerService) : Tool(_layerService.SelectedLayer)
     {   
         protected override void Paint(Point startPosition, Point currentPosition)
         {
@@ -18,8 +19,8 @@ namespace MiniShop.Tools.Pen
 
             int intRadius = (int) radius;
 
-            int bitmapWidth = _bitmap.PixelSize.Width;
-            int bitmapHeight = _bitmap.PixelSize.Height;
+            int bitmapWidth = _layerService.SelectedLayer.PixelSize.Width;
+            int bitmapHeight = _layerService.SelectedLayer.PixelSize.Height;
 
             int centerX = (int) currentPosition.X;
             int centerY = (int) currentPosition.Y;
