@@ -12,8 +12,15 @@
 		  x:Name="MainGrid">
 		<local:ToolsBar x:Name="ToolsBar" Grid.Column="0"/>
 		<local:ImageViewer x:Name="ImageViewer" Grid.Column="1"/>
-		<local:ToolsSettingsBar x:Name="SettingsBar" Grid.Column="2"/>
-		<local:LayersBar x:Name="LayersBar" />
+
+		<Grid x:Name="RightSidebar"
+		      Grid.Column="2"
+		      Width="240"
+		      RowDefinitions="*, *"
+		      IsVisible="False">
+			<local:ToolsSettingsBar x:Name="SettingsBar" Grid.Row="0"/>
+			<local:LayersBar x:Name="LayersBar" Grid.Row="1"/>
+		</Grid>
 	</Grid>
 
 </Window>

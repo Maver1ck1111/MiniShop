@@ -21,11 +21,12 @@ public partial class MainWindow : Window
         if (toolMode == ToolMode.None)
         {
             MainGrid.ColumnDefinitions[2].Width = new GridLength(0);
-            SettingsBar.IsVisible = false;
+            RightSidebar.IsVisible = false;
         } 
         else
         {
             MainGrid.ColumnDefinitions[2].Width = GridLength.Auto;
+            RightSidebar.IsVisible = true;
             SettingsBar.IsVisible = true;
         }
     }

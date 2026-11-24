@@ -5,15 +5,30 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using MiniShop.ObservableStateServices;
 
 namespace MiniShop.Tools.Common;
 
-public abstract class Tool(WriteableBitmap _bitmap) : ITool
+public abstract class Tool : ITool
 {
     protected Point _startPosition;
     protected ILockedFramebuffer? _lockedBitMap;
     protected bool _isPanning = false;
     protected List<Point> _points = new();
+    protected WriteableBitmap _bitmap;
+    protected readonly ILayerStateService _layerStateService;
+    
+    public Tool(ILayerStateService layerStateService)
+    {
+        _layerStateService = layerStateService;
+        _bitmap = _layerStateService.SelectedLayer;
+        _layerStateService.LayerChanged += OnLayerChanged;
+    }
+
+    private void OnLayerChanged()
+    {
+        _bitmap = _layerStateService.SelectedLayer;
+    }
     
     public virtual void OnMoved(object? sender, RoutedEventArgs e, Point position)
     {

@@ -6,12 +6,13 @@
              x:Name="SettingsBar"
              x:Class="MiniShop.Views.ToolsSettingsBar">
 
-	<Border Width="220"
-	        Background="#121212"
+	<Border Background="#121212"
 	        BorderBrush="#2A2A2A"
 	        BorderThickness="1,0,0,0"
 	        Padding="16">
-		<local:PenSettingsBar />
+		<ScrollViewer VerticalScrollBarVisibility="Auto">
+			<local:PenSettingsBar />
+		</ScrollViewer>
 	</Border>
 
 </UserControl>

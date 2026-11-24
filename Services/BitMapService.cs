@@ -13,7 +13,7 @@ public class BitMapService : IBitMapService
             new PixelSize((int)bitmap.Size.Width, (int)bitmap.Size.Height),
             new Vector(96, 96),
             PixelFormat.Bgra8888,
-            AlphaFormat.Unpremul
+            AlphaFormat.Premul
         );
 
         using (var lockedFrame = clearBitmap.Lock())

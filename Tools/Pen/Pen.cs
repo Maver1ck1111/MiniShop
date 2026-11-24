@@ -1,5 +1,4 @@
 ﻿using Avalonia;
-using Avalonia.Controls.Shapes;
 using Avalonia.Input;
 using Avalonia.Media;
 using MiniShop.ObservableStateServices;
@@ -16,7 +15,7 @@ public class Pen : Tool
         
     public Pen(PenSettings settings,
           ILayerStateService layerStateSetvice) 
-          : base(layerStateSetvice.SelectedLayer)
+          : base(layerStateSetvice)
     {
         _settings = settings;
         _layerStateSetvice = layerStateSetvice;
@@ -27,7 +26,7 @@ public class Pen : Tool
         var pixel = _settings.Pixel;
         var thickness = _settings.PenThickness;
         
-        var color = Color.FromArgb(pixel.Opacity, pixel.R, pixel.G, pixel.B); // A, R, G, B (0..255)
+        var color = Color.FromArgb(pixel.Opacity, pixel.R, pixel.G, pixel.B);
         var brush = new SolidColorBrush(color);
         
         var geometry = new PolylineGeometry(_points, isFilled: false);

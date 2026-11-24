@@ -30,7 +30,6 @@ public partial class ImageViewer : UserControl
     private readonly IToolStateService _toolsService;
     private readonly ILayerStateService _layerService;
     private readonly IDialogService _dialogService;
-    private readonly IBitMapService _bitMapService;
     private readonly Polyline _polyline;
     
     public ImageViewer()
@@ -39,7 +38,6 @@ public partial class ImageViewer : UserControl
         _toolsService = App.ServiceProvider.GetRequiredService<IToolStateService>();
         _layerService = App.ServiceProvider.GetRequiredService<ILayerStateService>();
         _dialogService = App.ServiceProvider.GetRequiredService<IDialogService>();
-        _bitMapService = App.ServiceProvider.GetRequiredService<IBitMapService>();
         
         _tool = _toolsService.SelectedTool;
         
@@ -55,9 +53,9 @@ public partial class ImageViewer : UserControl
         _tool = _toolsService.SelectedTool;
     }
     
-    public void OnSetCurrentLayer(WriteableBitmap currentLayer)
+    public void OnSetCurrentLayer()
     {
-        var image = new Image(){ Source = currentLayer };
+        var image = new Image(){ Source = _layerService.SelectedLayer };
         
         _currentImage = image;
         
@@ -87,8 +85,8 @@ public partial class ImageViewer : UserControl
         ImageCanvas.RenderTransform = group;
 
         CenterImage();
-            
-        _layerService.SetNewLayer(_bitMapService.CreateEmptyMap(writeableBitmap));
+
+        _layerService.SetImage(writeableBitmap);
     }
 
     private void OnCanvasPointerWheelChanged(object? sender, PointerWheelEventArgs e)
@@ -145,6 +143,9 @@ public partial class ImageViewer : UserControl
         var position = GetCurrentPoint(e);
         
         _tool.OnReleased(sender, e, position);
+        
+        _layerService.UpdateSelectedLayer();
+        
         PreviewOverlay.InvalidateVisual();
         _currentImage?.InvalidateVisual();
     }
@@ -159,7 +160,6 @@ public partial class ImageViewer : UserControl
         var currentPoint = GetCurrentPoint(e);
 
         _tool.OnMoved(sender, e, currentPoint);
-
         PreviewOverlay.InvalidateVisual();
     }
 

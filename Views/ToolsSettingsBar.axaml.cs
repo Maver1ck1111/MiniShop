@@ -7,7 +7,5 @@ public partial class ToolsSettingsBar : UserControl
     public ToolsSettingsBar()
     {
         InitializeComponent();
-
-        SettingsBar.IsVisible = false;
     }
 }

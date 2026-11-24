@@ -2,10 +2,178 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:local="clr-namespace:MiniShop"
+             xmlns:views="clr-namespace:MiniShop.Views"
              x:Class="MiniShop.Views.LayersBar">
-  <Grid
-    x:Name="LayersContainer">
-    
-  </Grid>
+	<UserControl.Styles>
+		<Style Selector="Border.layerRow">
+			<Setter Property="Background" Value="#1E1E1E"/>
+		</Style>
+		<Style Selector="Border.layerRow:pointerover">
+			<Setter Property="Background" Value="#262626"/>
+		</Style>
+		<Style Selector="Border.layerRow.selected">
+			<Setter Property="Background" Value="#0088CC"/>
+		</Style>
+		<Style Selector="Border.layerRow TextBlock.layerSubtitle">
+			<Setter Property="Foreground" Value="#8E8E8E"/>
+		</Style>
+		<Style Selector="Border.layerRow.selected TextBlock.layerSubtitle">
+			<Setter Property="Foreground" Value="#D8F1FF"/>
+		</Style>
+		<Style Selector="Path.eyeIcon">
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+		<Style Selector="Path.eyeIcon.hidden">
+			<Setter Property="Opacity" Value="0.3"/>
+		</Style>
+	</UserControl.Styles>
+
+	<Border Background="#121212"
+	        BorderBrush="#2A2A2A"
+	        BorderThickness="1,1,0,0">
+		<Grid RowDefinitions="Auto, *">
+			<Border Grid.Row="0"
+			        Background="#181818"
+			        BorderBrush="#2A2A2A"
+			        BorderThickness="0,0,0,1"
+			        Padding="10,7">
+				<Grid ColumnDefinitions="Auto, *, Auto">
+					<TextBlock Grid.Column="0"
+					           Text="•••"
+					           FontSize="12"
+					           Foreground="#8A8A8A"
+					           VerticalAlignment="Center"/>
+
+					<TextBlock Grid.Column="1"
+					           Text="Layers"
+					           FontSize="13"
+					           FontWeight="SemiBold"
+					           Foreground="#EAEAEA"
+					           HorizontalAlignment="Center"
+					           VerticalAlignment="Center"/>
+
+					<StackPanel Grid.Column="2"
+					            Orientation="Horizontal"
+					            Spacing="4">
+						<Button x:Name="AddLayerButton"
+						        Width="24"
+						        Height="24"
+						        Padding="0"
+						        Background="Transparent"
+						        CornerRadius="4"
+						        ToolTip.Tip="Add Layer"
+						        Click="OnAddLayerClicked">
+							<TextBlock Text="+"
+							           FontSize="16"
+							           Foreground="#C8C8C8"
+							           HorizontalAlignment="Center"
+							           VerticalAlignment="Center"
+							           Margin="0,-2,0,0"/>
+						</Button>
+
+						<Button x:Name="RemoveLayerButton"
+						        Width="24"
+						        Height="24"
+						        Padding="0"
+						        Background="Transparent"
+						        CornerRadius="4"
+						        ToolTip.Tip="Delete Layer">
+							<TextBlock Text="×"
+							           FontSize="16"
+							           Foreground="#C8C8C8"
+							           HorizontalAlignment="Center"
+							           VerticalAlignment="Center"
+							           Margin="0,-2,0,0"/>
+						</Button>
+					</StackPanel>
+				</Grid>
+			</Border>
+
+			<ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+				<ItemsControl x:Name="LayersListControl">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate x:DataType="views:LayerUiItem">
+							<Border Classes="layerRow"
+							        Classes.selected="{Binding IsSelected}"
+							        BorderBrush="#2A2A2A"
+							        BorderThickness="0,0,0,1"
+							        Padding="10,7"
+							        Cursor="Hand"
+							        PointerPressed="OnLayerRowClicked">
+								<Grid ColumnDefinitions="Auto, *, Auto">
+									
+									<Border Grid.Column="0"
+									        Width="36"
+									        Height="36"
+									        CornerRadius="3"
+									        BorderBrush="#4A4A4A"
+									        BorderThickness="1"
+									        ClipToBounds="True"
+									        Margin="0,0,10,0">
+										<Border.Background>
+											<DrawingBrush TileMode="Tile"
+											              DestinationRect="0,0,8,8"
+											              SourceRect="0,0,8,8">
+												<DrawingBrush.Drawing>
+													<DrawingGroup>
+														<GeometryDrawing Brush="#2C2C2C">
+															<GeometryDrawing.Geometry>
+																<RectangleGeometry Rect="0,0,8,8"/>
+															</GeometryDrawing.Geometry>
+														</GeometryDrawing>
+														<GeometryDrawing Brush="#3C3C3C">
+															<GeometryDrawing.Geometry>
+																<GeometryGroup>
+																	<RectangleGeometry Rect="0,0,4,4"/>
+																	<RectangleGeometry Rect="4,4,4,4"/>
+																</GeometryGroup>
+															</GeometryDrawing.Geometry>
+														</GeometryDrawing>
+													</DrawingGroup>
+												</DrawingBrush.Drawing>
+											</DrawingBrush>
+										</Border.Background>
+										<Image Source="{Binding Bitmap}"
+										       Stretch="Uniform"/>
+									</Border>
+
+									<StackPanel Grid.Column="1"
+									            VerticalAlignment="Center"
+									            Spacing="2">
+										<TextBlock Text="{Binding Name}"
+										           FontSize="13"
+										           FontWeight="SemiBold"
+										           Foreground="#FFFFFF"
+										           TextTrimming="CharacterEllipsis"/>
+										<TextBlock Classes="layerSubtitle"
+										           Text="{Binding Kind}"
+										           FontSize="11"
+										           FontStyle="Italic"/>
+									</StackPanel>
+
+									<Button Grid.Column="2"
+									        Width="28"
+									        Height="28"
+									        Padding="4"
+									        Background="Transparent"
+									        CornerRadius="4"
+									        VerticalAlignment="Center"
+									        ToolTip.Tip="Toggle Visibility"
+									        Click="OnToggleVisibilityClicked">
+										<Path Classes="eyeIcon"
+										      Classes.hidden="{Binding !IsLayerVisible}"
+										      Data="M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"
+										      Fill="#FFFFFF"
+										      Stretch="Uniform"
+										      Width="16"
+										      Height="16"/>
+									</Button>
+								</Grid>
+							</Border>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</ScrollViewer>
+		</Grid>
+	</Border>
 </UserControl>
