@@ -62,7 +62,7 @@ public partial class LayersBar : UserControl
         {
             if (ReferenceEquals(layer, clicked))
             {
-                layer.IsSelected = true;
+                layer.IsSelected = !layer.IsSelected;
                 _layerStateService.SetLayer(layer.Bitmap);
             }
         }
@@ -73,6 +73,7 @@ public partial class LayersBar : UserControl
         if (sender is Button { DataContext: LayerUiItem layer })
         {
             layer.IsLayerVisible = !layer.IsLayerVisible;
+            _layerStateService.ToggleLayerVisibility(layer.Bitmap, layer.IsLayerVisible);
         }
     }
 

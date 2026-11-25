@@ -10,6 +10,8 @@ using MiniShop.ObservableStateServices;
 using MiniShop.Services;
 using MiniShop.Tools;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MiniShop.Views;
 
@@ -43,9 +45,21 @@ public partial class ImageViewer : UserControl
         
         _layerService.LayerChanged += OnSetCurrentLayer;
         _toolsService.ToolChanged += OnSetTool;
+        _layerService.LayerVisibilityToggle += OnToggleVisibility;
 
         _polyline = new Polyline();
         ImageCanvas.Children.Add(_polyline);
+    }
+    
+    public void OnToggleVisibility(WriteableBitmap bitmap, bool isVisible)
+    {
+        foreach (var image in ImageContainer.Children.OfType<Image>())
+        {
+            if (ReferenceEquals(image.Source, bitmap))
+            {
+                image.IsVisible = isVisible;
+            }
+        }
     }
     
     public void OnSetTool(ToolMode mode)

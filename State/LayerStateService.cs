@@ -18,6 +18,12 @@ public class LayerStateService : ILayerStateService
     public event Action LayerChanged;
     public event Action<WriteableBitmap> ImageSelected;
     public event Action LayerUpdated;
+    public event Action<WriteableBitmap, bool> LayerVisibilityToggle;
+
+    public void ToggleLayerVisibility(WriteableBitmap bitmap, bool isVisible)
+    {
+        LayerVisibilityToggle.Invoke(bitmap, isVisible);
+    }
 
     public void SetImage(WriteableBitmap image)
     {

@@ -16,8 +16,11 @@
 
 			<Canvas x:Name="ImageCanvas" RenderTransformOrigin="0,0">
 				<Grid x:Name="ImageContainer">
-						<Image
-							x:Name="Image"/>
+					<Image x:Name="Image"/>
+					<Border BorderBrush="#5A5A5A"
+					        BorderThickness="1"
+					        IsHitTestVisible="False"
+					        ZIndex="999"/>
 				</Grid>
 				
 				<views:PreviewOverlay x:Name="PreviewOverlay"/>

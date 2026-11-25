@@ -12,8 +12,10 @@ public interface ILayerStateService
     event Action LayerChanged;
     event Action<WriteableBitmap> ImageSelected;
     event Action LayerUpdated;
+    public event Action<WriteableBitmap, bool> LayerVisibilityToggle;
     void UpdateSelectedLayer();
     void SetNewLayer(WriteableBitmap layer);
     void SetLayer(WriteableBitmap layer);
     void SetImage(WriteableBitmap image);
+    public void ToggleLayerVisibility(WriteableBitmap bitmap, bool isVisible);
 }
